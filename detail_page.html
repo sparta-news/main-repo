@@ -9,9 +9,14 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <style>
+    * {
+      margin: 0px;
+      padding: 0px;
+    }
+
     body {
       font-family: Arial, sans-serif;
-      background-color: #f5f5f5;
+      background-color: white;
       margin: 0;
       padding: 0;
       display: flex;
@@ -19,56 +24,103 @@
       align-items: center;
     }
 
-    header {
-      width: 100%;
-      background-color: #03C75A;
-      color: white;
-      padding: 10px;
-      display: flex;
-      align-items: center;
-    }
-
-    .home-button {
+    .home_button {
       background: none;
       border: none;
-      color: white;
-      font-size: 20px;
+      color: #00C73C;
       cursor: pointer;
+    }
+
+    header {
+      margin-top: 5%;
+      margin-bottom: 3%;
+      width: 100%;
       display: flex;
+      flex-direction: column;
+      justify-content: center;
       align-items: center;
-      gap: 5px;
     }
 
-    .home-button i {
-      font-size: 24px;
+    #search {
+      width: 60%;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      margin-bottom: 2%;
     }
 
-    header h1 {
-      margin: 0;
-      padding-left: 10px;
-      font-size: 24px;
+    #search>div>button {
+      width: 50px;
+      border: none;
+      background-color: transparent;
+      cursor: pointer;
+    }
+
+
+
+    nav {
+      margin-left: auto;
+      margin-right: auto;
+      width: 60%;
+      height: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-bottom: 1px solid #30303860;
+      padding-bottom: 10px;
+    }
+
+    nav>ul {
+      list-style: none;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-evenly;
+    }
+
+    .category {
+      width: 10%;
+      text-align: center;
+      font-weight: bold;
+      color: #303038;
+      background-color: white;
+      border: none;
+    }
+
+    .category:hover {
+      transform: translateY(-10px);
+      transition: all 0.3s ease-in-out;
+    }
+
+    .add_btn{
+      text-align: center;
+      font-weight: bold;
+      color: #303038;
+      background-color: white;
+      border: none;
     }
 
     .content-container {
       width: 100%;
+      background-color: aqua;
       display: flex;
       justify-content: center;
     }
 
     .left-space {
-      width: 15%;
+      width: 20%;
       background-color: white;
     }
 
-    /* .right-space {
-      width: 15%;
-      background-color: #d9f2e6;
-    } */
+    .right-space {
+      width: 20%;
+      background-color: white;
+    }
 
     main {
-      width: 50%;
+      width: 40%;
       background-color: white;
       padding: 20px;
+      border-right: 1px solid rgb(219, 219, 219);
     }
 
     #contents {
@@ -76,26 +128,9 @@
     }
 
     aside {
-      width: 35%;
-      background-color: #d9f2e6;
-      padding: 15px;
-    }
-
-    .category {
-      display: flex;
-      gap: 10px;
-      padding: 10px;
-      justify-content: center;
-      background-color: #d9f2e6;
-    }
-
-    .category button {
+      width: 20%;
       background-color: white;
-      border: none;
-      padding: 8px 12px;
-      cursor: pointer;
-      border-radius: 5px;
-      font-size: x-small;
+      padding: 15px;
     }
 
     aside ul {
@@ -139,13 +174,21 @@
 
     // Firebase 구성 정보
     const firebaseConfig = {
-
+      apiKey: "AIzaSyBnZSX3atvHqAKvrMn_c-oGsgEvYfJw33s",
+      authDomain: "sparta-6c3c1.firebaseapp.com",
+      projectId: "sparta-6c3c1",
+      storageBucket: "sparta-6c3c1.firebasestorage.app",
+      messagingSenderId: "392838436875",
+      appId: "1:392838436875:web:25daf2e154d7a714e74f0e",
+      measurementId: "G-WTNBYF46GN"
     };
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
     const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+
+    let add_info = 1;
 
 
     // docid: 불러오고자 하는 기사의 고유값
@@ -180,8 +223,10 @@
         $("#contents").text(formattedContents);
         $("#title").text(title);
 
-        let DR_data = `날짜: ${new Intl.DateTimeFormat('ko-KR', options).format(date_temp2)} 기자: ${reporter}`
-        $("#DR").text(DR_data);
+        let date_html = `${new Intl.DateTimeFormat('ko-KR', options).format(date_temp2)}`
+        let reporter_html = `${reporter} 기자`
+        $("#date").text(date_html);
+        $("#reporter").text(reporter_html);
 
         let image_html = `<img src="${image}" alt="뉴스 이미지" style="width: 60%;">`
         $("#main_image").empty();
@@ -200,18 +245,13 @@
       countSpan.textContent = currentCount + 1;
     }
 
-    getDocument();
+    //사이드바 초기 화면 
+    async function getSideNews_init() {
 
-    let side_ctgy = "정치";
-
-    async function getPoliticalNews(ctgy) {
-      const startDate = Timestamp.fromDate(new Date("2020-12-01"));
-      // 🔹 "news" 컬렉션에서 category가 "정치"인 문서만 가져오기
-      const q = query(collection(db, "news"), where("category", "==", ctgy), orderBy("date", "desc"), limit(5));
+      const q = query(collection(db, "news"), orderBy("date", "desc"), limit(5));
       const querySnapshot = await getDocs(q);
       $('#side_bar').empty();
 
-      // 🔹 가져온 문서들 반복 처리
       querySnapshot.forEach((doc) => {
         let data = doc.data();
 
@@ -221,61 +261,92 @@
       });
     }
 
-    getPoliticalNews(side_ctgy)
+    //사이드바 카테고리 선택 및 수량 추가
+    async function getSideNews(ctgy, num) {
 
+      const q = query(collection(db, "news"), where("category", "==", ctgy), orderBy("date", "desc"), limit(num));
+      const querySnapshot = await getDocs(q);
+      $('#side_bar').empty();
+
+      querySnapshot.forEach((doc) => {
+        let data = doc.data();
+
+        let side_html = `<li><img src="${data.image}" alt = "뉴스1" ><a href= "detail_page.html?id=${doc.id}"> ${data.title}</a></li>`;
+        console.log(side_html)
+        $('#side_bar').append(side_html);
+      });
+    }
+
+    //카테고리 선택
     $("#politics").click(async function () {
       let a = "정치"
-      getPoliticalNews(a);
+      getSideNews(a, 5);
     })
 
     $("#economy").click(async function () {
       let b = "경제"
-      getPoliticalNews(b);
+      getSideNews(b, 5);
     })
 
     $("#society").click(async function () {
       let c = "사회"
-      getPoliticalNews(c);
+      getSideNews(c, 5);
     })
 
     $("#life").click(async function () {
       let d = "생활"
-      getPoliticalNews(d);
+      getSideNews(d, 5);
     })
 
     $("#science").click(async function () {
       let e = "과학"
-      getPoliticalNews(e);
+      getSideNews(e, 5);
     })
 
     $("#world").click(async function () {
       let f = "세계"
-      getPoliticalNews(f);
+      getSideNews(f, 5);
     })
 
+    //home 버튼 링크 추후 수정 필요!
     $("#home_btn").click(async function () {
       window.location.href = "home.html";
     })
+
+    //초기 화면 구성
+    getDocument();
+    getSideNews_init();
 
   </script>
 </head>
 
 <body>
+
   <header>
-    <button class="home-button" id = 'home_btn'>
-       📰(홈버튼)
-    </button>
-    <h1>NEWS</h1>
+    <div id="search">
+      <h1 style="color: #00C73C;"><button class="home_button" id="home_btn">News</button></h1>
+    </div>
+    <nav>
+      <ul>
+        <button class="category" value='정치' id="politics">정치</button>
+        <button class="category" value='경제' id="economy">경제</button>
+        <button class="category" value='사회' id="society">사회</button>
+        <button class="category" value='생활' id="life">생활</button>
+        <button class="category" value='과학' id="science">과학</button>
+        <button class="category" value='세계' id="world">세계</button>
+      </ul>
+    </nav>
   </header>
+
   <div class="content-container">
     <div class="left-space"></div>
     <main>
       <h2><strong><span id='title'>뉴스 제목</span></strong></h2>
       <div>
-        <p><span id='DR'>날짜, 기사</span></p>
+        <p><span id='date'>날짜</span></p>
+        <p><span id='reporter'>기사</span></p>
       </div>
       <div id="main_image"></div>
-      <!-- <img src="" alt="뉴스 이미지" style="width: 100%;"> -->
       <p id="contents">뉴스 내용<br><br> </p>
 
       <!-- rating 기능 구현 필요 -->
@@ -290,18 +361,10 @@
 
     </main>
     <aside>
-      <div class="category">
-        <button type="button" class="btn btn-outline-success" value='정치' id="politics">정치</button>
-        <button type="button" class="btn btn-outline-success" value='경제' id="economy">경제</button>
-        <button type="button" class="btn btn-outline-success" value='사회' id="society">사회</button>
-        <button type="button" class="btn btn-outline-success" value='생활' id="life">생활</button>
-        <button type="button" class="btn btn-outline-success" value='과학' id="science">과학</button>
-        <button type="button" class="btn btn-outline-success" value='세계' id="world">세계</button>
-      </div>
-      <h3>다른 뉴스</h3>
-      <ul><span id="side_bar"></span></ul>
+      <ul id='news_list'><span id="side_bar"></span></ul>
+      <button id="add_info" class="add_btn">더 보기</button>
     </aside>
-    <!-- <div class="right-space"></div> -->
+    <div class="right-space"></div>
   </div>
 </body>
 
