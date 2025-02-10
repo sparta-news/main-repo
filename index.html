@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News</title>
+    <style>
+        body {
+            background-color: #f9f9f9;
+            color: #222;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            width: 100%;
+            height: 50px;
+            margin-left: auto;
+            margin-right: auto;
+            background-color: #1EC800;
+        }
+        nav{
+            width: 80%;
+            height: 100%;
+            background-color: red;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        header > nav > ul{
+            display: flex;
+            flex-direction: row;
+            list-style: none;
+            justify-content: space-evenly;
+            
+        }
+        header > nav > ul > li{
+            border: 1px solid;
+            width: 30px;
+            text-align: center;
+        }
+        
+
+        footer {
+            height: 100px;
+            background-color: #1EC800;
+            text-align: center;
+            color: white;
+            line-height: 100px;
+            font-size: 16px;
+            margin-top: 50px;
+        }
+
+
+        #container {
+            width: 80%;
+            min-height: 100vh;
+            /* 높이 제한을 없애고 최소 높이만 설정 */
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 100px;
+
+        }
+
+        .hot-topic {
+            width: 70%;
+            height: 400px;
+            margin: 20px auto;
+            display: grid;
+            grid-template-columns: 3fr 2fr;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        #topic-img{
+            width: 100%;
+            height: 100%;
+        }
+
+        #topic-phase {
+            display: flex;
+            flex-direction: column;
+            word-wrap: break-word;
+            /* 긴 단어가 자동 줄바꿈 */
+            overflow-wrap: break-word;
+            /* 긴 문장이 컨테이너 내에서 줄바꿈 */
+            max-width: 100%;
+            /* 부모 요소의 최대 크기 유지 */
+            padding: 15px;
+        }
+
+        #topic-phase p {
+            width: 90%;
+            /* 텍스트가 너무 길어지지 않도록 조정 */
+        }
+
+        .lates-news {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+        }
+
+        .lates-news>h2 {
+            width: 70%;
+        }
+
+        .news-list {
+            width: 70%;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 20px;
+            grid-template-rows: 1fr 1fr 1fr;
+        }
+
+        .news-box {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            /* 세로 중앙 정렬 */
+            align-items: center;
+            /* 가로 중앙 정렬 */
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease-in-out;
+            text-align: center;
+            padding-bottom: 10px;
+            width: 100%;
+            height: 250px;
+        }
+
+        .news-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .news-list>div>img {
+            width: 100%;
+            height: 70%;
+            border-bottom: 1px solid #ddd;
+            border-radius: 10px 10px 0 0;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#">1</a></li>
+                <li>1</li>
+                <li>1</li>
+                <li>1</li>
+                <li>1</li>
+            </ul>
+        </nav>
+        
+    </header>
+    <div id="container">
+        <div class="hot-topic"
+            onclick="window.open('https://n.news.naver.com/article/025/0003419023?ntype=RANKING', '_blank')">
+            <img src="https://imgnews.pstatic.net/image/025/2025/02/06/0003419023_001_20250206151016156.jpg?type=w860" id="topic-img">
+            <div id="topic-phase">
+                <h1>"전한길 절대 쫄지마라…탄핵땐 헌재 부숴야"</h1>
+                <p>김용원 인권위원회(인권위) 상임위원이 내란 선동 혐의로 경찰에 고발된 한국사 강사 전한길씨에 대한 무료변론을 자청하면서 “탄핵이 되면 헌법재판소를 없애버려야 한다”고 주장했다....
+                </p>
+            </div>
+        </div>
+        <div class="lates-news">
+            <h2>최근 뉴스</h2>
+            <div class="news-list">
+                <div class="news-box"
+                    onclick="window.open('https://n.news.naver.com/article/055/0001229388?ntype=RANKING', '_blank')">
+                    <img
+                        src="https://imgnews.pstatic.net/image/025/2025/02/06/0003419097_001_20250206211518600.jpg?type=w860">
+                    <h3>前수방사령관 "나 같은 군인이 대통령에 반기 들면 그게 쿠데타"</h3>
+                </div>
+                <div class="news-box"
+                    onclick="window.open('https://n.news.naver.com/article/001/0015196879?ntype=RANKING', '_blank')">
+                    <img
+                        src="https://imgnews.pstatic.net/image/025/2025/02/06/0003419143_001_20250206220014879.jpg?type=w860">
+
+                    <h3>트럼프 "전쟁 끝나면 이스라엘이 美에 가자지구 넘길 것"</h3>
+                </div>
+                <div class="news-box"
+                    onclick="window.open('https://n.news.naver.com/article/008/0005149837?ntype=RANKING', '_blank')">
+                    <img
+                        src="https://imgnews.pstatic.net/image/008/2025/02/06/0005149837_001_20250206172814374.jpg?type=w860">
+                    <h3>"대통령이 인원 끌어내라 지시" 증언에 윤 대통령, 인상·언성 높여</h3>
+                </div>
+                <div class="news-box"
+                    onclick="window.open('https://n.news.naver.com/article/008/0005149371?ntype=RANKING', '_blank')">
+                    <img
+                        src="https://imgnews.pstatic.net/image/008/2025/02/06/0005149371_001_20250206091013276.jpg?type=w860">
+                    <h3>대선 양자대결시…이재명 47%-김문수 38%, 이재명 47%·오세훈 32%</h3>
+                </div>
+                <div class="news-box"
+                    onclick="window.open('https://n.news.naver.com/article/008/0005149709?ntype=RANKING', '_blank')">
+                    <img
+                        src="https://imgnews.pstatic.net/image/008/2025/02/06/0005149709_001_20250206161912458.jpg?type=w860">
+
+                    <h3>25개월 딸에 '불닭소스' 먹여 사망시킨 30대 부부…머리 '사커킥'도</h3>
+                </div>
+                <div class="news-box"
+                    onclick="window.open('https://n.news.naver.com/article/052/0002149910?ntype=RANKING', '_blank')">
+                    <img
+                        src="https://imgnews.pstatic.net/image/052/2025/02/06/202502061852356666_t_20250206185411193.jpg?type=w860">
+
+                    <h3>[속보] 윤 대통령, 헌재 변론 마치고 서울구치소로 출발</h3>
+                </div>
+                <div class="news-box"
+                    onclick="window.open('https://n.news.naver.com/article/052/0002149885?ntype=RANKING', '_blank')">
+                    <img
+                        src="https://imgnews.pstatic.net/image/052/2025/02/06/202502061806128372_t_20250206181419806.jpg?type=w860">
+
+                    <h3>이재명 "후원금 모금, 25분만 마감...소액후원 99%"</h3>
+                </div>
+                <div class="news-box"
+                    onclick="window.open('https://n.news.naver.com/article/001/0015196689?ntype=RANKING', '_blank')">
+                    <img
+                        src="https://imgnews.pstatic.net/image/014/2025/02/06/0005304841_001_20250206203709936.jpg?type=w860">
+
+                    <h3>"자꾸 말이 달라진다" 헌재 재판관들도 곽종근 진술 지적했다
+                    </h3>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <footer>
+
+    </footer>
+
+</body>
+
+</html>
