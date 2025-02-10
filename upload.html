@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>newsUpload</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Black+Han+Sans&family=Gamja+Flower&family=Gowun+Dodum&family=Moirai+One&family=Nanum+Gothic&family=Noto+Sans+KR:wght@100..900&display=swap');
+
+    * {
+        font-family: "Nanum Gothic", serif;
+        font-weight: 400;
+        font-style: normal;
+    }
+
+    button {
+    border: none !important; 
+    outline: none; 
+    box-shadow: none; 
+}
+
+    .top {
+        height: 30px;
+        background-color: white;
+
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        justify-content: space-between;
+
+        margin-top: 5px;
+    }
+
+    .newsHome {
+        width: 70px;
+        height: 30px;
+        background-color: white;
+        border: 0.1px solid white;
+        color: #00C73C;
+        font-size: 28px;
+        font-family: "Bebas Neue", serif;
+        font-weight: 400;
+        font-style: normal;
+
+    }
+
+    .uploadNews {
+        width: 70px;
+        height: 30px;
+        background-color: #00C73C;
+        border: 0.1px solid black;
+        margin-top: 10px;
+
+        color: white;
+        font-size: 12px;
+
+    }
+
+    .middle {
+        height: 30px;
+        background-color: white;
+
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        justify-content: flex-start;
+
+        margin-top: 5px;
+    }
+
+    .addPhoto {
+        width: 50px;
+        height: 30px;
+        color: darkgrey;
+        font-size: 10px;
+
+        background-color: transparent;
+        border: 0px;
+    }
+
+    .addLink,
+    .addQuote,
+    .addContour,
+    .toH1,
+    .addTable {
+        width: 50px;
+        height: 30px;
+        color: darkgrey;
+        font-size: 10px;
+
+        background-color: transparent;
+        border: 0px;
+        margin-left: 10px;
+    }
+
+    .middle2 {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px;
+        background-color: white;
+    }
+
+    .middle2 hr {
+        width: 100%;
+        height: 1px;
+        border: none;
+        background-color: darkgrey;
+        margin: 7px 0 0 0;
+    }
+
+    .leftArray,
+    .centerArray
+    .rightArray {
+        background-color: transparent;
+        border: none;
+        padding: 2px;
+        align-self: flex-start;
+        margin-left: 5px;
+        margin-top: 3px;
+    }
+
+    .main {
+        min-height: 100vh;
+        background-color: #e9ecef;
+        background-size: cover;
+
+
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 20px 0;
+
+    }
+
+    .writting {
+        width: 50%;
+        height: 95%;
+        background-color: white;
+
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        padding: 30px;
+        flex-direction: column;
+    }
+
+    .inputTitle {
+        width: 100%;
+        height: 60px;
+        background-color: transparent;
+        border: none;
+        outline: none;
+
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        justify-content: center;
+
+        font-size: 30px;
+    }
+
+    .inputContent {
+        width: 100%;
+        height: 300px;
+        background-color: transparent;
+        border: none;
+        outline: none;
+        resize: none;
+
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        justify-content: center;
+    }
+
+    .inputTitle:focus,
+    .inputContent:focus {
+        outline: none;
+        border: none;
+        box-shadow: none;
+    }
+
+    blockquote::before {
+        content: "\201C";
+        font-size: 3em;
+        color: #bcbcbc;
+        float: left;
+        margin: -5px 10px 0px -10px;
+    }
+</style>
+
+<script>
+
+    //뉴스 메인으로 돌아가기
+    function backToHome() {
+        window.location.href = "";
+    }
+
+    //업로드하기
+    function upload() {
+        window.location.href = "";
+    }
+
+    //사진 입력받기
+    function addPhoto() {
+        let imageUrl = prompt("사진의 URL을 입력하세요:");
+
+        if (imageUrl) {
+            let contentBox = document.getElementById("content");
+
+            let previewBox = document.getElementById("photoBox");
+            let imgTag = `<img src="${imageUrl}" style="width: 700px; height: 400px; margin-top: 10px;" class="card-img-top" alt="첨부된 이미지">`;
+
+            previewBox.innerHTML = imgTag;
+            previewBox.style.display = "block";
+        }
+    }
+
+    //링크 입력받기
+    function addLink() {
+        let linkUrl = prompt("링크를 입력하세요:");
+
+        if (linkUrl) {
+            let previewBox = document.getElementById("linkBox");
+
+            if (!document.getElementById("generatedLink")) {
+                let linkTag = `
+                <div id="generatedLink" style="margin-top: 10px; padding: 10px; background-color: #f8f9fa; border-radius: 5px;">
+                    <strong>LINK :</strong> 
+                    <a href="${linkUrl}" target="_blank" style="color: #007bff; text-decoration: none; font-weight: bold;">
+                        ${linkUrl}
+                    </a>
+                </div>
+            `;
+                previewBox.innerHTML = linkTag;
+            } else {
+                document.getElementById("generatedLink").innerHTML = `
+                <strong>LINK :</strong> 
+                <a href="${linkUrl}" target="_blank" style="color: white; text-decoration: none; font-weight: bold;">
+                    ${linkUrl}
+                </a>
+            `;
+            }
+
+            previewBox.style.display = "block";
+        }
+    }
+
+    // 인용구 추가
+    function addQuote() {
+        let blockquoteTag = document.createElement("blockquote");
+        blockquoteTag.style.fontSize = "1.2em";
+        blockquoteTag.style.paddingLeft = "30px";
+        blockquoteTag.style.borderLeft = "5px solid #00C73C";
+
+        let contentBox = document.getElementById("content");
+
+        const selection = window.getSelection();
+        const range = selection.getRangeAt(0);
+        range.deleteContents();
+        range.insertNode(blockquoteTag);
+
+        range.setStartAfter(blockquoteTag);
+        range.setEndAfter(blockquoteTag);
+
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
+
+
+    //구분선 추가
+    function addContour() {
+        let hrTag = document.createElement("hr");
+        hrTag.style.width = "100%";
+        hrTag.style.border = "1px solid darkgrey";
+
+        let contentBox = document.getElementById("content");
+
+        const selection = window.getSelection();
+        const range = selection.getRangeAt(0);
+        range.deleteContents();
+        range.insertNode(hrTag);
+
+        range.setStartAfter(hrTag);
+        range.setEndAfter(hrTag);
+
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
+
+    //강조해주기
+    function toH1() {
+        document.execCommand("formatBlock", false, "H1");
+    }
+
+    document.getElementById("content").addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+            setTimeout(() => {
+                document.execCommand("formatBlock", false, "div");
+            }, 10);
+        }
+    });
+
+    //표 추가
+    function addTable() {
+        let tableHTML = `
+    <div class="tableContainer" style="width: 100%; text-align: left; margin-top: 10px; position: relative;">
+        <table style="width: 80%; max-width: 800px; margin: auto; border-collapse: collapse; border: 2px solid #333; table-layout: fixed;">
+            <thead>
+                <tr style="background-color: white; color: black;">
+                    <th contenteditable="true" style="width: 25%; height: 40px; padding: 8px; border: 2px solid #333; text-align: center;"></th>
+                    <th contenteditable="true" style="width: 25%; height: 40px; padding: 8px; border: 2px solid #333; text-align: center;"></th>
+                    <th contenteditable="true" style="width: 25%; height: 40px; padding: 8px; border: 2px solid #333; text-align: center;"></th>
+                    <th contenteditable="true" style="width: 25%; height: 40px; padding: 8px; border: 2px solid #333; text-align: center;"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th contenteditable="true" style="width: 25%; height: 40px; padding: 8px; border: 1px solid #aaa; text-align: center;"></th>
+                    <td contenteditable="true" style="width: 25%; height: 40px; padding: 8px; border: 1px solid #aaa; text-align: center;"></td>
+                    <td contenteditable="true" style="width: 25%; height: 40px; padding: 8px; border: 1px solid #aaa; text-align: center;"></td>
+                    <td contenteditable="true" style="width: 25%; height: 40px; padding: 8px; border: 1px solid #aaa; text-align: center;"></td>
+                </tr>
+                <tr>
+                    <th contenteditable="true" style="width: 25%; height: 40px; padding: 8px; border: 1px solid #aaa; text-align: center;"></th>
+                    <td contenteditable="true" style="width: 25%; height: 40px; padding: 8px; border: 1px solid #aaa; text-align: center;"></td>
+                    <td contenteditable="true" style="width: 25%; height: 40px; padding: 8px; border: 1px solid #aaa; text-align: center;"></td>
+                    <td contenteditable="true" style="width: 25%; height: 40px; padding: 8px; border: 1px solid #aaa; text-align: center;"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    `;
+
+        const contentBox = document.getElementById("content");
+        const tableContainer = document.createElement("div");
+        tableContainer.innerHTML = tableHTML;
+
+        const selection = window.getSelection();
+        const range = selection.getRangeAt(0);
+        range.deleteContents();
+        range.insertNode(tableContainer);
+
+        contentBox.style.textAlign = 'left';
+
+        let br = document.createElement("br");
+        tableContainer.appendChild(br);
+        moveCursorToEnd(br);
+    }
+
+</script>
+
+<body>
+    <div class="top">
+        <button onclick="backToHome()" class="newsHome">News</button>
+        <button onclick="upload()" type="button" class="uploadNews publish_btn__m9KHH"><span class="text__d09H7">발행
+            </span><i class="icon_wrap__VHKFf"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="13"
+                    aria-hidden="true" class="icon__X_qrd">
+                    <g fill="none" fill-rule="evenodd">
+                        <rect width="11" height="13" fill="#FFF" rx="1"></rect>
+                        <path fill="#00C73C" d="M2 9h4v1H2zm0-2h7v1H2zm0-2h7v1H2zm0-2h7v1H2z"></path>
+                    </g>
+                </svg></i></button>
+    </div>
+    <hr width="100%" height="1px" color="darkgrey">
+    <div class="middle">
+        <button onclick="addPhoto()" class="addPhoto">
+            <img src="https://cdn-icons-png.flaticon.com/512/1160/1160358.png" width="30px" height="30px">
+            <p>사진</p>
+        </button>
+        <button onclick="addLink()" class="addLink">
+            <img src="https://cdn-icons-png.flaticon.com/512/659/659999.png" width="30px" height="30px">
+            <p>링크</p>
+        </button>
+        <button onclick="addQuote()" class="addQuote">
+            <img src="https://cdn-icons-png.flaticon.com/512/7350/7350737.png" width="30px" height="30px">
+            <p>인용구</p>
+        </button>
+        <button onclick="addContour()" class="addContour">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmQ2KcMneKA05MimvUs442AYny2iv7I5Ya9g&s"
+                width="30px" height="30px">
+            <p>구분선</p>
+        </button>
+        <button onclick="toH1()" class="toH1">
+            <img src="https://cdn-icons-png.flaticon.com/256/10435/10435031.png" width="30px" height="30px">
+            <p>강조</p>
+        </button>
+        <button onclick="addTable()" class="addTable">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPzC4oHeCQogJlyL28zezQCoNUndlbjwqs9w&s"
+                width="30px" height="30px">
+            <p>표 추가</p>
+        </button>
+    </div>
+    <div class="middle2">
+        <hr width="100%" color="darkgrey">
+        <div class="button-group">
+            <button onclick="" class="leftArray">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_nHLBKK-q64o2biTqvC5H_6s88hgTX_qpIw&s"
+                    width="15px" height="15px">
+            </button>
+            <button onclick="" class="centerArray">
+                <img src="https://w7.pngwing.com/pngs/888/43/png-transparent-center-align-feather-icon.png"
+                    width="15px" height="15px">
+            </button>
+            <button onclick="" class="rightArray">
+                <img src="https://cdn-icons-png.flaticon.com/512/10140/10140056.png"
+                    width="15px" height="15px">
+            </button>
+        </div>
+    
+        <hr width="100%" color="darkgrey">
+    </div>
+    
+    <div class="main">
+        <div class="writting">
+            <div>
+                <input type="text" class="inputTitle form-control mb-3" id="title" placeholder="제목"
+                    style="width: 90vh;">
+                <hr width="100%" color="darkgrey">
+            </div>
+            <div>
+                <div class="photo" id="photoBox" style="display: none;"></div>
+
+                <div id="content" class="inputContent form-control" contenteditable="true" style="width: 90vh; height: 80vh; border: 1px solid #ccc; padding: 10px;
+    text-align: left; vertical-align: top; min-height: 80vh; display: block;">
+                </div>
+
+                <div id="linkBox" style="display: none;"></div>
+
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
