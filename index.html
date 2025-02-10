@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>News</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
     <style>
         * {
             margin: 0px;
@@ -30,7 +32,7 @@
             margin-bottom: 2%;
         }
 
-        #search> div > button {
+        #search>div>button {
             width: 50px;
             border: none;
             background-color: transparent;
@@ -110,12 +112,21 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             grid-template-rows: repeat(3, 1fr);
-            grid-gap: 15px;
+            grid-gap:20px;
+        }
+        .news-box > h3 {
+            margin-bottom: 10px;
+        }
+        .news-box{
+            border: 1px solid;
+        }
+        .news-box:hover{
+            cursor: pointer;
         }
 
         .news-lead {
             display: flex;
-            font-size: 12px;
+            font-size: 13px;
         }
 
         .news-box>div>img {
@@ -129,22 +140,65 @@
             height: 150px;
             margin-top: 5%;
         }
+
     </style>
+
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+    import { getFirestore, collection, doc, getDoc, getDocs, query, where, orderBy, limit, Timestamp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
+    // Firebase 구성 정보
+    const firebaseConfig = {
+        apiKey: "AIzaSyBnZSX3atvHqAKvrMn_c-oGsgEvYfJw33s",
+        authDomain: "sparta-6c3c1.firebaseapp.com",
+        projectId: "sparta-6c3c1",
+        storageBucket: "sparta-6c3c1.firebasestorage.app",
+        messagingSenderId: "392838436875",
+        appId: "1:392838436875:web:25daf2e154d7a714e74f0e",
+        measurementId: "G-WTNBYF46GN"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    let docs = await getDocs(collection(db, "news"));
+    docs.forEach((doc) => {
+        let row = doc.data();
+        let image = row["image"];
+        let id = doc.id;
+        let title = row["title"];
+    
+        let temp = `<div class="news-box" onclick="window.open('detail_page.html?id=${id}')">
+                      <h3>${title}</h3>
+                      <div class="news-lead">
+                        <img src="${image}">
+                        <p>12·3 비상계엄 사태에서 병력을 가동한 수도방위사령부의 이진우 전 사령관은 당시 계엄 선포의 적법성 여부를 따질 상황이 아니었고 명령을 따르는 게 정당했다고 주장했습니다.</p>
+                      </div>
+                    </div>`;
+        
+        $(".news-list").append(temp);
+    });
+
+</script>
 </head>
+
 
 <body>
     <header>
         <div id="search">
             <h1 style="color: #00C73C;">News</h1>
             <div>
-            <button type="button" onclick="window.open('upload.html')"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
-              </svg></button>
-            <button><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                    fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                    <path
-                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
-                </svg></button>
+                <button type="button" onclick="window.open('upload.html')"><svg xmlns="http://www.w3.org/2000/svg"
+                        width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                            d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
+                    </svg></button>
+                <button><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-search" viewBox="0 0 16 16">
+                        <path
+                            d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                    </svg></button>
             </div>
         </div>
         <nav>
@@ -187,87 +241,7 @@
             </div>
         </section>
         <section class="news-list">
-            <div class="news-box">
-                <h3>前수방사령관 "나 같은 군인이 대통령에 반기 들면 그게 쿠데타"</h3>
-                <div class="news-lead">
-                    <img
-                        src="https://imgnews.pstatic.net/image/025/2025/02/06/0003419097_001_20250206211518600.jpg?type=w860">
-                    <p>12·3 비상계엄 사태에서 병력을 가동한 수도방위사령부의 이진우 전 사령관은 당시 계엄 선포의 적법성 여부를 따질 상황이 아니었고 명령을 따르는 게 정당했다고 주장했습니다.
-                    </p>
-                </div>
-            </div>
-            <div class="news-box">
-                <h3>前수방사령관 "나 같은 군인이 대통령에 반기 들면 그게 쿠데타"</h3>
-                <div class="news-lead">
-                    <img
-                        src="https://imgnews.pstatic.net/image/025/2025/02/06/0003419097_001_20250206211518600.jpg?type=w860">
-                    <p>12·3 비상계엄 사태에서 병력을 가동한 수도방위사령부의 이진우 전 사령관은 당시 계엄 선포의 적법성 여부를 따질 상황이 아니었고 명령을 따르는 게 정당했다고 주장했습니다.
-                    </p>
-                </div>
-            </div>
-            <div class="news-box">
-                <h3>前수방사령관 "나 같은 군인이 대통령에 반기 들면 그게 쿠데타"</h3>
-                <div class="news-lead">
-                    <img
-                        src="https://imgnews.pstatic.net/image/025/2025/02/06/0003419097_001_20250206211518600.jpg?type=w860">
-                    <p>12·3 비상계엄 사태에서 병력을 가동한 수도방위사령부의 이진우 전 사령관은 당시 계엄 선포의 적법성 여부를 따질 상황이 아니었고 명령을 따르는 게 정당했다고 주장했습니다.
-                    </p>
-                </div>
-            </div>
-            <div class="news-box">
-                <h3>前수방사령관 "나 같은 군인이 대통령에 반기 들면 그게 쿠데타"</h3>
-                <div class="news-lead">
-                    <img
-                        src="https://imgnews.pstatic.net/image/025/2025/02/06/0003419097_001_20250206211518600.jpg?type=w860">
-                    <p>12·3 비상계엄 사태에서 병력을 가동한 수도방위사령부의 이진우 전 사령관은 당시 계엄 선포의 적법성 여부를 따질 상황이 아니었고 명령을 따르는 게 정당했다고 주장했습니다.
-                    </p>
-                </div>
-            </div>
-            <div class="news-box">
-                <h3>前수방사령관 "나 같은 군인이 대통령에 반기 들면 그게 쿠데타"</h3>
-                <div class="news-lead">
-                    <img
-                        src="https://imgnews.pstatic.net/image/025/2025/02/06/0003419097_001_20250206211518600.jpg?type=w860">
-                    <p>12·3 비상계엄 사태에서 병력을 가동한 수도방위사령부의 이진우 전 사령관은 당시 계엄 선포의 적법성 여부를 따질 상황이 아니었고 명령을 따르는 게 정당했다고 주장했습니다.
-                    </p>
-                </div>
-            </div>
-            <div class="news-box">
-                <h3>前수방사령관 "나 같은 군인이 대통령에 반기 들면 그게 쿠데타"</h3>
-                <div class="news-lead">
-                    <img
-                        src="https://imgnews.pstatic.net/image/025/2025/02/06/0003419097_001_20250206211518600.jpg?type=w860">
-                    <p>12·3 비상계엄 사태에서 병력을 가동한 수도방위사령부의 이진우 전 사령관은 당시 계엄 선포의 적법성 여부를 따질 상황이 아니었고 명령을 따르는 게 정당했다고 주장했습니다.
-                    </p>
-                </div>
-            </div>
-            <div class="news-box">
-                <h3>前수방사령관 "나 같은 군인이 대통령에 반기 들면 그게 쿠데타"</h3>
-                <div class="news-lead">
-                    <img
-                        src="https://imgnews.pstatic.net/image/025/2025/02/06/0003419097_001_20250206211518600.jpg?type=w860">
-                    <p>12·3 비상계엄 사태에서 병력을 가동한 수도방위사령부의 이진우 전 사령관은 당시 계엄 선포의 적법성 여부를 따질 상황이 아니었고 명령을 따르는 게 정당했다고 주장했습니다.
-                    </p>
-                </div>
-            </div>
-            <div class="news-box">
-                <h3>前수방사령관 "나 같은 군인이 대통령에 반기 들면 그게 쿠데타"</h3>
-                <div class="news-lead">
-                    <img
-                        src="https://imgnews.pstatic.net/image/025/2025/02/06/0003419097_001_20250206211518600.jpg?type=w860">
-                    <p>12·3 비상계엄 사태에서 병력을 가동한 수도방위사령부의 이진우 전 사령관은 당시 계엄 선포의 적법성 여부를 따질 상황이 아니었고 명령을 따르는 게 정당했다고 주장했습니다.
-                    </p>
-                </div>
-            </div>
-            <div class="news-box">
-                <h3>前수방사령관 "나 같은 군인이 대통령에 반기 들면 그게 쿠데타"</h3>
-                <div class="news-lead">
-                    <img
-                        src="https://imgnews.pstatic.net/image/025/2025/02/06/0003419097_001_20250206211518600.jpg?type=w860">
-                    <p>12·3 비상계엄 사태에서 병력을 가동한 수도방위사령부의 이진우 전 사령관은 당시 계엄 선포의 적법성 여부를 따질 상황이 아니었고 명령을 따르는 게 정당했다고 주장했습니다.
-                    </p>
-                </div>
-            </div>
+                
         </section>
     </main>
     <footer>
