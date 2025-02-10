@@ -20,10 +20,10 @@
     }
 
     button {
-    border: none !important; 
-    outline: none; 
-    box-shadow: none; 
-}
+        border: none !important;
+        outline: none;
+        box-shadow: none;
+    }
 
     .top {
         height: 30px;
@@ -42,8 +42,10 @@
         height: 30px;
         background-color: white;
         border: 0.1px solid white;
+
         color: #00C73C;
         font-size: 28px;
+
         font-family: "Bebas Neue", serif;
         font-weight: 400;
         font-style: normal;
@@ -116,7 +118,7 @@
     }
 
     .leftArray,
-    .centerArray
+    .centerArray,
     .rightArray {
         background-color: transparent;
         border: none;
@@ -178,6 +180,9 @@
         align-items: center;
         padding: 10px;
         justify-content: center;
+
+        overflow-y: auto;
+        max-height: 80vh;
     }
 
     .inputTitle:focus,
@@ -193,6 +198,13 @@
         color: #bcbcbc;
         float: left;
         margin: -5px 10px 0px -10px;
+    }
+
+    .chooseCategory {
+        color: black;
+        margin: 10px 0 0 0;
+
+        outline: darkgray;
     }
 </style>
 
@@ -355,6 +367,24 @@
         moveCursorToEnd(br);
     }
 
+    //왼쪽 정렬
+    function leftArray() {
+        let contentBox = document.getElementById("content");
+        contentBox.style.textAlign = "left";
+    }
+
+    //가운데 정렬
+    function centerArray() {
+        let contentBox = document.getElementById("content");
+        contentBox.style.textAlign = "center";
+    }
+
+    //오른쪽 정렬
+    function rightArray() {
+        let contentBox = document.getElementById("content");
+        contentBox.style.textAlign = "right";
+    }
+
 </script>
 
 <body>
@@ -401,23 +431,21 @@
     <div class="middle2">
         <hr width="100%" color="darkgrey">
         <div class="button-group">
-            <button onclick="" class="leftArray">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_nHLBKK-q64o2biTqvC5H_6s88hgTX_qpIw&s"
-                    width="15px" height="15px">
+            <button onclick="leftArray()" class="leftArray">
+                <img src="https://cdn-icons-png.flaticon.com/512/1994/1994233.png" width="15px" height="15px">
             </button>
-            <button onclick="" class="centerArray">
-                <img src="https://w7.pngwing.com/pngs/888/43/png-transparent-center-align-feather-icon.png"
-                    width="15px" height="15px">
+            <button onclick="centerArray()" class="centerArray">
+                <img src="https://w7.pngwing.com/pngs/888/43/png-transparent-center-align-feather-icon.png" width="15px"
+                    height="15px">
             </button>
-            <button onclick="" class="rightArray">
-                <img src="https://cdn-icons-png.flaticon.com/512/10140/10140056.png"
-                    width="15px" height="15px">
+            <button onclick="rightArray()" class="rightArray">
+                <img src="https://cdn-icons-png.flaticon.com/512/10140/10140056.png" width="15px" height="15px">
             </button>
         </div>
-    
+
         <hr width="100%" color="darkgrey">
     </div>
-    
+
     <div class="main">
         <div class="writting">
             <div>
@@ -433,6 +461,18 @@
                 </div>
 
                 <div id="linkBox" style="display: none;"></div>
+
+                <div>
+                    <select class="chooseCategory form-select" aria-label="Default select example">
+                        <option selected>카테고리</option>
+                        <option value="1">정치</option>
+                        <option value="2">경제</option>
+                        <option value="3">사회</option>
+                        <option value="3">생활</option>
+                        <option value="3">과학</option>
+                        <option value="3">세계</option>
+                    </select>
+                </div>
 
             </div>
         </div>
