@@ -20,10 +20,10 @@
     }
 
     button {
-    border: none !important; 
-    outline: none; 
-    box-shadow: none; 
-}
+        border: none !important;
+        outline: none;
+        box-shadow: none;
+    }
 
     .top {
         height: 30px;
@@ -42,8 +42,10 @@
         height: 30px;
         background-color: white;
         border: 0.1px solid white;
+
         color: #00C73C;
         font-size: 28px;
+
         font-family: "Bebas Neue", serif;
         font-weight: 400;
         font-style: normal;
@@ -116,7 +118,7 @@
     }
 
     .leftArray,
-    .centerArray
+    .centerArray,
     .rightArray {
         background-color: transparent;
         border: none;
@@ -178,6 +180,9 @@
         align-items: center;
         padding: 10px;
         justify-content: center;
+
+        overflow-y: auto;
+        max-height: 80vh;
     }
 
     .inputTitle:focus,
@@ -194,9 +199,50 @@
         float: left;
         margin: -5px 10px 0px -10px;
     }
+
+    .chooseCategory {
+        color: black;
+        margin: 10px 0 0 0;
+
+        outline: darkgray;
+    }
+
+    .writtenBy {
+        background-color: white;
+        margin: 10px 0 0 0;
+    }
 </style>
 
-<script>
+<script type="module">
+
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+    import { getFirestore, collection, doc, getDoc, getDocs, query, where, orderBy, limit, Timestamp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
+    // Firebase 구성 정보
+    const firebaseConfig = {
+        apiKey: "AIzaSyBnZSX3atvHqAKvrMn_c-oGsgEvYfJw33s",
+        authDomain: "sparta-6c3c1.firebaseapp.com",
+        projectId: "sparta-6c3c1",
+        storageBucket: "sparta-6c3c1.firebasestorage.app",
+        messagingSenderId: "392838436875",
+        appId: "1:392838436875:web:25daf2e154d7a714e74f0e",
+        measurementId: "G-WTNBYF46GN"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.onload = function () {
+    document.getElementById("addPhotoBtn").addEventListener("click", addPhoto);
+    document.getElementById("addLinkBtn").addEventListener("click", addLink);
+    document.getElementById("addQuoteBtn").addEventListener("click", addQuote);
+    document.getElementById("addContourBtn").addEventListener("click", addContour);
+    document.getElementById("toH1Btn").addEventListener("click", toH1);
+    document.getElementById("addTableBtn").addEventListener("click", addTable);
+    document.getElementById("leftArrayBtn").addEventListener("click", leftArray);
+    document.getElementById("centerArrayBtn").addEventListener("click", centerArray);
+    document.getElementById("rightArrayBtn").addEventListener("click", rightArray);
+};
 
     //뉴스 메인으로 돌아가기
     function backToHome() {
@@ -204,54 +250,58 @@
     }
 
     //업로드하기
-    function upload() {
-        window.location.href = "";
+    async function uploadNews() {
+    const title = document.getElementById("title").value.trim();
+    const content = document.getElementById("content").innerHTML.trim();
+    const image = document.getElementById("photoBox").innerHTML.trim() || "";
+    const link = document.getElementById("linkBox").innerHTML.trim() || "";
+    const category = document.querySelector(".chooseCategory").value;
+    const author = document.querySelector(".writtenBy input").value.trim();
+
+    try {
+        const docRef = await addDoc(collection(db, "news"), {
+            title: title,
+            content: content,
+            image: image,
+            link: link,
+            category: category,
+            author: author,
+            timestamp: Timestamp.now()
+        });
+
+        alert("업로드가 완료되었습니다");
+        console.log("Document written with ID: ", docRef.id);
+
+        window.location.href = "news_list.html";  
+    } catch (error) {
+        console.error("Error adding document: ", error);
+        alert("업로드 중 문제가 발생했습니다.");
     }
+    }
+
+    window.onload = function () {
+    document.getElementById("uploadBtn").addEventListener("click", uploadNews);
+};
 
     //사진 입력받기
     function addPhoto() {
-        let imageUrl = prompt("사진의 URL을 입력하세요:");
-
-        if (imageUrl) {
-            let contentBox = document.getElementById("content");
-
-            let previewBox = document.getElementById("photoBox");
-            let imgTag = `<img src="${imageUrl}" style="width: 700px; height: 400px; margin-top: 10px;" class="card-img-top" alt="첨부된 이미지">`;
-
-            previewBox.innerHTML = imgTag;
-            previewBox.style.display = "block";
-        }
+    let imageUrl = prompt("사진의 URL을 입력하세요:");
+    if (imageUrl) {
+        let previewBox = document.getElementById("photoBox");
+        previewBox.innerHTML = `<img src="${imageUrl}" style="width: 700px; height: 400px; margin-top: 10px;">`;
+        previewBox.style.display = "block";
     }
+}
 
     //링크 입력받기
     function addLink() {
-        let linkUrl = prompt("링크를 입력하세요:");
-
-        if (linkUrl) {
-            let previewBox = document.getElementById("linkBox");
-
-            if (!document.getElementById("generatedLink")) {
-                let linkTag = `
-                <div id="generatedLink" style="margin-top: 10px; padding: 10px; background-color: #f8f9fa; border-radius: 5px;">
-                    <strong>LINK :</strong> 
-                    <a href="${linkUrl}" target="_blank" style="color: #007bff; text-decoration: none; font-weight: bold;">
-                        ${linkUrl}
-                    </a>
-                </div>
-            `;
-                previewBox.innerHTML = linkTag;
-            } else {
-                document.getElementById("generatedLink").innerHTML = `
-                <strong>LINK :</strong> 
-                <a href="${linkUrl}" target="_blank" style="color: white; text-decoration: none; font-weight: bold;">
-                    ${linkUrl}
-                </a>
-            `;
-            }
-
-            previewBox.style.display = "block";
-        }
+    let linkUrl = prompt("링크를 입력하세요:");
+    if (linkUrl) {
+        let previewBox = document.getElementById("linkBox");
+        previewBox.innerHTML = `<a href="${linkUrl}" target="_blank">${linkUrl}</a>`;
+        previewBox.style.display = "block";
     }
+}
 
     // 인용구 추가
     function addQuote() {
@@ -355,12 +405,35 @@
         moveCursorToEnd(br);
     }
 
+    //왼쪽 정렬
+    function leftArray() {
+        let contentBox = document.getElementById("content");
+        contentBox.style.textAlign = "left";
+    }
+
+    //가운데 정렬
+    function centerArray() {
+        let contentBox = document.getElementById("content");
+        contentBox.style.textAlign = "center";
+    }
+
+    //오른쪽 정렬
+    function rightArray() {
+        let contentBox = document.getElementById("content");
+        contentBox.style.textAlign = "right";
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("addPhotoBtn").addEventListener("click", addPhoto);
+    document.getElementById("addLinkBtn").addEventListener("click", addLink);
+});
+
 </script>
 
 <body>
     <div class="top">
         <button onclick="backToHome()" class="newsHome">News</button>
-        <button onclick="upload()" type="button" class="uploadNews publish_btn__m9KHH"><span class="text__d09H7">발행
+        <button id="uploadBtn" type="button" class="uploadNews publish_btn__m9KHH"><span class="text__d09H7">발행
             </span><i class="icon_wrap__VHKFf"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="13"
                     aria-hidden="true" class="icon__X_qrd">
                     <g fill="none" fill-rule="evenodd">
@@ -371,28 +444,28 @@
     </div>
     <hr width="100%" height="1px" color="darkgrey">
     <div class="middle">
-        <button onclick="addPhoto()" class="addPhoto">
+        <button id="addPhotoBtn" class="addPhoto">
             <img src="https://cdn-icons-png.flaticon.com/512/1160/1160358.png" width="30px" height="30px">
             <p>사진</p>
         </button>
-        <button onclick="addLink()" class="addLink">
+        <button id="addLinkBtn" class="addLink">
             <img src="https://cdn-icons-png.flaticon.com/512/659/659999.png" width="30px" height="30px">
             <p>링크</p>
         </button>
-        <button onclick="addQuote()" class="addQuote">
+        <button id="addQuoteBtn" class="addQuote">
             <img src="https://cdn-icons-png.flaticon.com/512/7350/7350737.png" width="30px" height="30px">
             <p>인용구</p>
         </button>
-        <button onclick="addContour()" class="addContour">
+        <button id="addContourBtn" class="addContour">
             <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmQ2KcMneKA05MimvUs442AYny2iv7I5Ya9g&s"
                 width="30px" height="30px">
             <p>구분선</p>
         </button>
-        <button onclick="toH1()" class="toH1">
+        <button id="toH1Btn" class="toH1">
             <img src="https://cdn-icons-png.flaticon.com/256/10435/10435031.png" width="30px" height="30px">
             <p>강조</p>
         </button>
-        <button onclick="addTable()" class="addTable">
+        <button id="addTableBtn" class="addTable">
             <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPzC4oHeCQogJlyL28zezQCoNUndlbjwqs9w&s"
                 width="30px" height="30px">
             <p>표 추가</p>
@@ -401,23 +474,21 @@
     <div class="middle2">
         <hr width="100%" color="darkgrey">
         <div class="button-group">
-            <button onclick="" class="leftArray">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_nHLBKK-q64o2biTqvC5H_6s88hgTX_qpIw&s"
-                    width="15px" height="15px">
+            <button id="leftArrayBtn" class="leftArray">
+                <img src="https://cdn-icons-png.flaticon.com/512/1994/1994233.png" width="15px" height="15px">
             </button>
-            <button onclick="" class="centerArray">
-                <img src="https://w7.pngwing.com/pngs/888/43/png-transparent-center-align-feather-icon.png"
-                    width="15px" height="15px">
+            <button id="centerArrayBtn" class="centerArray">
+                <img src="https://w7.pngwing.com/pngs/888/43/png-transparent-center-align-feather-icon.png" width="15px"
+                    height="15px">
             </button>
-            <button onclick="" class="rightArray">
-                <img src="https://cdn-icons-png.flaticon.com/512/10140/10140056.png"
-                    width="15px" height="15px">
+            <button id="rightArrayBtn" class="rightArray">
+                <img src="https://cdn-icons-png.flaticon.com/512/10140/10140056.png" width="15px" height="15px">
             </button>
         </div>
-    
+
         <hr width="100%" color="darkgrey">
     </div>
-    
+
     <div class="main">
         <div class="writting">
             <div>
@@ -433,6 +504,23 @@
                 </div>
 
                 <div id="linkBox" style="display: none;"></div>
+
+                <div>
+                    <select class="chooseCategory form-select" aria-label="Default select example">
+                        <option selected>카테고리</option>
+                        <option value="1">정치</option>
+                        <option value="2">경제</option>
+                        <option value="3">사회</option>
+                        <option value="3">생활</option>
+                        <option value="3">과학</option>
+                        <option value="3">세계</option>
+                    </select>
+                </div>
+                <div class="writtenBy input-group input-group-sm mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">name</span>
+                    <input type="text" class="form-control" aria-label="Sizing example input"
+                        aria-describedby="inputGroup-sizing-sm">
+                </div>
 
             </div>
         </div>

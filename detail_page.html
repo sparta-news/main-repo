@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>뉴스 상세 페이지</title>
+  <title>News</title>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
@@ -91,7 +91,7 @@
       transition: all 0.3s ease-in-out;
     }
 
-    .add_btn{
+    .add_btn {
       text-align: center;
       font-weight: bold;
       color: #303038;
@@ -158,11 +158,36 @@
     }
 
     .rating button {
+      border: 2px solid #00C73C;
+      background-color: transparent;
       padding: 10px;
-      border: none;
       cursor: pointer;
-      font-size: 20px;
-      border-radius: 20px;
+      font-size: 15px;
+      border-radius: 15px;
+      box-shadow: 0 4px 6px rgba(0, 199, 60, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .rating button:hover {
+      background-color: rgba(0, 199, 60, 0.1);
+      box-shadow: 0 6px 8px rgba(0, 199, 60, 0.5); 
+    }
+
+
+    a {
+      color: black;
+      text-decoration: none;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    a:hover {
+      color: #00C73C;
+    }
+
+    .add_btn:hover {
+      color: #00C73C;
     }
   </style>
   <script type="module">
@@ -170,7 +195,7 @@
 
 
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-    import { getFirestore, collection, doc, getDoc, getDocs, query, where, orderBy, limit, Timestamp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+    import { getFirestore, collection, doc, getDoc, getDocs, query, where, orderBy, limit, Timestamp, updateDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
     // Firebase 구성 정보
     const firebaseConfig = {
@@ -188,18 +213,30 @@
 
     const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
 
-    let add_info = 1;
-
 
     // docid: 불러오고자 하는 기사의 고유값
     const urlParams = new URLSearchParams(window.location.search);
     const docId = urlParams.get('id');
 
+    // 더보기 버튼 동작용 변수
+    let status = "없음";
+    let init_info = 5;
+    let economy_info = 5;
+    let society_info = 5;
+    let life_info = 5;
+    let science_info = 5;
+    let world_info = 5;
+    let politics_info = 5;
+    let rating_arr = new Array(5);
+    let rating_btn_st = Array(5).fill(false);
 
     // id 값에 맞는 main 화면 로드
     async function getDocument() {
       const docRef = doc(db, "news", docId);
       const docSnap = await getDoc(docRef);
+
+      //데이터베이스에 저장할때 사용해주면 좋을 것
+      //let arr = Array(5).fill(0); 
 
       if (docSnap.exists()) {
         let news = docSnap.data();
@@ -209,12 +246,18 @@
         let category = news['category'];
         let contents = news['contents'];
         let date = news['date'];
-        let rating0 = news['rating'][0]
-        let rating1 = news['rating'][1]
-        let rating2 = news['rating'][2]
-        let rating3 = news['rating'][3]
-        let rating4 = news['rating'][4]
-        let image = news['image'];//
+        rating_arr[0] = Number(news['rating'][0]);
+        rating_arr[1] = Number(news['rating'][1]);
+        rating_arr[2] = Number(news['rating'][2]);
+        rating_arr[3] = Number(news['rating'][3]);
+        rating_arr[4] = Number(news['rating'][4]);
+        let image = news['image'];
+
+        $("#count_0").text(rating_arr[0]);
+        $("#count_1").text(rating_arr[1]);
+        $("#count_2").text(rating_arr[2]);
+        $("#count_3").text(rating_arr[3]);
+        $("#count_4").text(rating_arr[4]);
 
         let date_temp1 = date.seconds * 1000 + Math.floor(date.nanoseconds / 1000000);
         let date_temp2 = new Date(date_temp1);
@@ -239,16 +282,31 @@
     }
 
     //onclick 사용(평가 항목) db 연결 필요
-    function rateNews(level) {
-      let countSpan = document.getElementById(`count-${level}`);
-      let currentCount = parseInt(countSpan.textContent) || 0;
-      countSpan.textContent = currentCount + 1;
-    }
+    function rateNews(index) {
+      if (rating_btn_st[index]) {
+        rating_arr[index] -= 1;
+        rating_btn_st[index] = false;
+        $("#count_0").text(rating_arr[0]);
+        $("#count_1").text(rating_arr[1]);
+        $("#count_2").text(rating_arr[2]);
+        $("#count_3").text(rating_arr[3]);
+        $("#count_4").text(rating_arr[4]);
+      }
+      else {
+        rating_arr[index] += 1;
+        rating_btn_st[index] = true;
+        $("#count_0").text(rating_arr[0]);
+        $("#count_1").text(rating_arr[1]);
+        $("#count_2").text(rating_arr[2]);
+        $("#count_3").text(rating_arr[3]);
+        $("#count_4").text(rating_arr[4]);
+      }
+    };
 
     //사이드바 초기 화면 
-    async function getSideNews_init() {
+    async function getSideNews_init(num) {
 
-      const q = query(collection(db, "news"), orderBy("date", "desc"), limit(5));
+      const q = query(collection(db, "news"), orderBy("date", "desc"), limit(num));
       const querySnapshot = await getDocs(q);
       $('#side_bar').empty();
 
@@ -256,7 +314,6 @@
         let data = doc.data();
 
         let side_html = `<li><img src="${data.image}" alt = "뉴스1" ><a href= "detail_page.html?id=${doc.id}"> ${data.title}</a></li>`;
-        console.log(side_html)
         $('#side_bar').append(side_html);
       });
     }
@@ -272,51 +329,127 @@
         let data = doc.data();
 
         let side_html = `<li><img src="${data.image}" alt = "뉴스1" ><a href= "detail_page.html?id=${doc.id}"> ${data.title}</a></li>`;
-        console.log(side_html)
         $('#side_bar').append(side_html);
       });
     }
 
     //카테고리 선택
     $("#politics").click(async function () {
-      let a = "정치"
-      getSideNews(a, 5);
+      status = "정치"
+      getSideNews(status, 5);
     })
 
     $("#economy").click(async function () {
-      let b = "경제"
-      getSideNews(b, 5);
+      status = "경제"
+      getSideNews(status, 5);
     })
 
     $("#society").click(async function () {
-      let c = "사회"
-      getSideNews(c, 5);
+      status = "사회"
+      getSideNews(status, 5);
     })
 
     $("#life").click(async function () {
-      let d = "생활"
-      getSideNews(d, 5);
+      status = "생활"
+      getSideNews(status, 5);
     })
 
     $("#science").click(async function () {
-      let e = "과학"
-      getSideNews(e, 5);
+      status = "과학"
+      getSideNews(status, 5);
     })
 
     $("#world").click(async function () {
-      let f = "세계"
-      getSideNews(f, 5);
+      status = "세계"
+      getSideNews(status, 5);
     })
+
+    $("#rating_0").click(async function () {
+      rateNews(0);
+      console.log(rating_arr);
+      const docRef = doc(db, "news", docId);
+      let rating_str_arr = rating_arr.map(rating => String(rating));
+      await updateDoc(docRef, { rating: rating_str_arr });
+      alert("평점이 업데이트되었습니다!");
+    });
+
+    $("#rating_1").click(async function () {
+      rateNews(1);
+      console.log(rating_arr);
+      const docRef = doc(db, "news", docId);
+      let rating_str_arr = rating_arr.map(rating => String(rating));
+      await updateDoc(docRef, { rating: rating_str_arr });
+      alert("평점이 업데이트되었습니다!");
+    });
+
+    $("#rating_2").click(async function () {
+      rateNews(2);
+      console.log(rating_arr);
+      const docRef = doc(db, "news", docId);
+      let rating_str_arr = rating_arr.map(rating => String(rating));
+      await updateDoc(docRef, { rating: rating_str_arr });
+      alert("평점이 업데이트되었습니다!");
+    });
+
+    $("#rating_3").click(async function () {
+      rateNews(3);
+      console.log(rating_arr);
+      const docRef = doc(db, "news", docId);
+      let rating_str_arr = rating_arr.map(rating => String(rating));
+      await updateDoc(docRef, { rating: rating_str_arr });
+      alert("평점이 업데이트되었습니다!");
+    });
+
+    $("#rating_4").click(async function () {
+      rateNews(4);
+      console.log(rating_arr);
+      const docRef = doc(db, "news", docId);
+      let rating_str_arr = rating_arr.map(rating => String(rating));
+      await updateDoc(docRef, { rating: rating_str_arr });
+      alert("평점이 업데이트되었습니다!");
+    });
 
     //home 버튼 링크 추후 수정 필요!
     $("#home_btn").click(async function () {
-      window.location.href = "home.html";
+      window.location.href = "index.html";
     })
 
-    //초기 화면 구성
-    getDocument();
-    getSideNews_init();
+    // 더보기 버튼
+    $("#add_info").click(async function () {
+      switch (status) {
+        case "정치":
+          politics_info += 5;
+          getSideNews(status, politics_info);
+          break;
+        case "경제":
+          economy_info += 5;
+          getSideNews(status, economy_info);
+          break;
+        case "사회":
+          society_info += 5;
+          getSideNews(status, society_info);
+          break;
+        case "생활":
+          life_info += 5;
+          getSideNews(status, life_info);
+          break;
+        case "과학":
+          science_info += 5;
+          getSideNews(status, science_info);
+          break;
+        case "세계":
+          world_info += 5;
+          getSideNews(status, world_info);
+          break;
+        default:
+          init_info += 5;
+          getSideNews_init(init_info);
+      }
+    })
 
+    // 초기 화면 구성
+    getDocument();
+    getSideNews_init(5);
   </script>
 </head>
 
@@ -332,7 +465,7 @@
         <button class="category" value='경제' id="economy">경제</button>
         <button class="category" value='사회' id="society">사회</button>
         <button class="category" value='생활' id="life">생활</button>
-        <button class="category" value='과학' id="science">과학</button>
+        <button class="category" value='과학' id="science">과학 기술</button>
         <button class="category" value='세계' id="world">세계</button>
       </ul>
     </nav>
@@ -351,11 +484,11 @@
 
       <!-- rating 기능 구현 필요 -->
       <div class="rating">
-        <button onclick="rateNews('good')">😀 (<span id="count-good">0</span>)</button>
-        <button onclick="rateNews('normal')">🙂 (<span id="count-normal">0</span>)</button>
-        <button onclick="rateNews('average')">😐 (<span id="count-average">0</span>)</button>
-        <button onclick="rateNews('bad')">😟 (<span id="count-bad">0</span>)</button>
-        <button onclick="rateNews('verybad')">😡 (<span id="count-verybad">0</span>)</button>
+        <button id="rating_0"><p>😀 유용함</p> <p><span id="count_0">0</span></p></button>
+        <button id="rating_1"><p>😀 흥미진진</p> <p><span id="count_1">0</span></p></button>
+        <button id="rating_2"><p>😀 공감백배</p> <p><span id="count_2">0</span></p></button>
+        <button id="rating_3"><p>😀 분석탁월</p> <p><span id="count_3">0</span></p></button>
+        <button id="rating_4"><p>😀 후속강추</p> <p><span id="count_4">0</span></p></button>
       </div>
 
 
