@@ -1,3 +1,72 @@
+<style>
+        header {
+            margin-top: 5%;
+            margin-bottom: 3%;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #headIcon:hover {
+            cursor: pointer;
+        }
+
+        #search {
+            width: 60%;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            margin-bottom: 2%;
+        }
+
+        #search>div>button {
+            width: 50px;
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+        }
+
+
+
+        nav {
+            margin-left: auto;
+            margin-right: auto;
+            width: 60%;
+            height: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-bottom: 1px solid #30303860;
+            padding-bottom: 10px;
+        }
+
+        nav>ul {
+            list-style: none;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+        }
+
+        .category {
+            width: 10%;
+            text-align: center;
+            font-weight: bold;
+            color: #303038;
+        }
+
+        .category:hover {
+            transform: translateY(-10px);
+            transition: all 0.3s ease-in-out;
+            cursor: pointer;
+        }
+        a{
+            text-decoration: none;
+        }
+</style>
+
+
 <header>
     <div id="search">
         <h1 id="headIcon" style="color: #00C73C;" onclick="window.open('index.html','_self')">News</h1>
@@ -17,22 +86,22 @@
     <nav>
         <ul>
             <li class="category">
-                <p>정치</p>
+                <a href="category_page.html?category=정치"><p>정치</p></a>
             </li>
             <li class="category">
-                <p>경제</p>
+                <a href="category_page.html?category=경제"><p>경제</p></a>
             </li>
             <li class="category">
-                <p>사회</p>
+                <a href="category_page.html?category=사회"><p>사회</p></a>
             </li>
             <li class="category">
-                <p>생활</p>
+                <a href="category_page.html?category=생활"><p>생활</p></a>
             </li>
             <li class="category">
-                <p>과학 기술</p>
+                <a href="category_page.html?category=과학"><p>과학 기술</p></a>
             </li>
             <li class="category">
-                <p>세계</p>
+                <a href="category_page.html?category=세계"><p>세계</p></a>
             </li>
         </ul>
     </nav>
