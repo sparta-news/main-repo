@@ -24,6 +24,10 @@
             align-items: center;
         }
 
+        #headIcon:hover {
+            cursor: pointer;
+        }
+
         #search {
             width: 60%;
             display: flex;
@@ -81,29 +85,33 @@
 
         }
 
+        .container {
+            width: 60%;
+        }
+
         .hot-topic {
-            width: 65%;
-            height: 50%;
+            width: 100%;
+            height: 400px;
             margin-bottom: 3%;
             display: flex;
-            flex-direction: row;
-            justify-content: space-around;
             border-bottom: 1px solid #30303860;
             padding-bottom: 3%
         }
 
+        .hot-topic>img {
+            max-height: 100%;
+        }
+
+        .hot-topic:hover {
+            cursor: pointer;
+        }
+
         .topic-phase {
-            display: flex;
-            flex-direction: column;
-            word-wrap: break-word;
-            /* 긴 단어가 자동으로 줄바꿈 */
-            overflow-wrap: break-word;
-            /* 긴 문장이 컨테이너 내에서 줄바꿈 */
-            max-width: 40%;
-            /* 부모 요소의 너비를 넘지 않게 설정 */
-            padding: 15px;
+            display: block;
+            padding-left: 50px;
             flex-grow: 1;
-            /* 텍스트가 부모 요소 내에서 남은 공간을 채울 수 있도록 */
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .news-list {
@@ -112,82 +120,150 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             grid-template-rows: repeat(3, 1fr);
-            grid-gap:20px;
+            grid-gap: 40px;
         }
-        .news-box > h3 {
+
+        .news-box>h4 {
             margin-bottom: 10px;
         }
-        .news-box{
-            border: 1px solid;
-        }
-        .news-box:hover{
+
+
+        .news-box:hover {
             cursor: pointer;
         }
 
+        .content-text {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin: 0;
+            padding: 0;
+        }
+
         .news-lead {
-            display: flex;
+            display: block;
             font-size: 13px;
         }
 
         .news-box>div>img {
-            width: 50%;
-            margin-right: 10px;
+            width: 100%;
         }
 
+        /*footer css*/
         footer {
             background-color: #f4f6f8;
             width: 100%;
             height: 150px;
             margin-top: 5%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            font-size: 12px;
+            font-weight: 500;
+            color: #424242;
         }
 
+        footer>ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+        }
+
+        footer>ul li {
+            padding: 10px 15px;
+            position: relative;
+        }
+
+        footer>ul li:not(:last-child)::after {
+            content: '|';
+            position: absolute;
+            top: 10px;
+            right: 0px;
+            /* 위치 조정 */
+            color: #424242;
+        }
+
+        footer>p {
+            margin-left: 15px;
+        }
+
+        a:link {
+            color: #424242;
+        }
+
+        a:visited {
+            color: #424242;
+        }
     </style>
 
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-    import { getFirestore, collection, doc, getDoc, getDocs, query, where, orderBy, limit, Timestamp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getFirestore, collection, doc, getDoc, getDocs, query, where, orderBy, limit, Timestamp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
-    // Firebase 구성 정보
-    const firebaseConfig = {
-        apiKey: "AIzaSyBnZSX3atvHqAKvrMn_c-oGsgEvYfJw33s",
-        authDomain: "sparta-6c3c1.firebaseapp.com",
-        projectId: "sparta-6c3c1",
-        storageBucket: "sparta-6c3c1.firebasestorage.app",
-        messagingSenderId: "392838436875",
-        appId: "1:392838436875:web:25daf2e154d7a714e74f0e",
-        measurementId: "G-WTNBYF46GN"
-    };
+        // Firebase 구성 정보
+        const firebaseConfig = {
+            apiKey: "AIzaSyBnZSX3atvHqAKvrMn_c-oGsgEvYfJw33s",
+            authDomain: "sparta-6c3c1.firebaseapp.com",
+            projectId: "sparta-6c3c1",
+            storageBucket: "sparta-6c3c1.firebasestorage.app",
+            messagingSenderId: "392838436875",
+            appId: "1:392838436875:web:25daf2e154d7a714e74f0e",
+            measurementId: "G-WTNBYF46GN"
+        };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-    let docs = await getDocs(collection(db, "news"));
-    docs.forEach((doc) => {
-        let row = doc.data();
-        let image = row["image"];
-        let id = doc.id;
-        let title = row["title"];
-    
-        let temp = `<div class="news-box" onclick="window.open('detail_page.html?id=${id}')">
-                      <h3>${title}</h3>
-                      <div class="news-lead">
-                        <img src="${image}">
-                        <p>12·3 비상계엄 사태에서 병력을 가동한 수도방위사령부의 이진우 전 사령관은 당시 계엄 선포의 적법성 여부를 따질 상황이 아니었고 명령을 따르는 게 정당했다고 주장했습니다.</p>
-                      </div>
-                    </div>`;
-        
-        $(".news-list").append(temp);
-    });
+        let docs = await getDocs(collection(db, "news"));
+        let cnt = 0;
+        for (let doc of docs.docs) {
+            if (cnt >= 10) break;  // 9개 이상이면 루프 종료
+            let row = doc.data();
+            let image = row["image"];
+            let id = doc.id;
+            let title = row["title"];
+            let content = row["contents"]
+            if(cnt == 0){
+                let temp = `
+                <section class="hot-topic" onclick="window.open('detail_page.html?id=${id}')">
+                <img class="topic-img"
+                    src="${image}">
+                <div class="topic-phase">
+                    <h1>${title}</h1>
+                    <br>
+                    <p>${content}
+                    </p>
+                </div>
+            </section>
+            `
+            $(".container").append(temp);
+            cnt++;
+            continue;
+            }
 
-</script>
+            let temp = `<div class="news-box" onclick="window.open('detail_page.html?id=${id}')">
+                  <h4>${title}</h4>
+                  <div class="news-lead">
+                    <img src="${image}">
+                    <p class="content-text">${content}</p>
+                  </div>
+                </div>`;
+
+            $(".news-list").append(temp);
+            cnt++;
+        }
+    </script>
 </head>
 
 
 <body>
     <header>
         <div id="search">
-            <h1 style="color: #00C73C;">News</h1>
+            <h1 id="headIcon" style="color: #00C73C;" onclick="window.open('index.html','_self')">News</h1>
             <div>
                 <button type="button" onclick="window.open('upload.html')"><svg xmlns="http://www.w3.org/2000/svg"
                         width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
@@ -225,28 +301,33 @@
         </nav>
     </header>
     <main>
-        <section class="hot-topic" onclick="window.open('detail_page.html')">
-            <img class="topic-img"
-                src="https://imgnews.pstatic.net/image/025/2025/02/06/0003419023_001_20250206151016156.jpg?type=w860">
-            <div class="topic-phase">
-                <h1>"전한길 절대 쫄지마라…탄핵땐 헌재 부숴야"</h1>
-                <br>
-                <p>김용원 인권위원회(인권위) 상임위원이 내란 선동 혐의로 경찰에 고발된 한국사 강사 전한길씨에 대한 무료변론을 자청하면서 “탄핵이 되면 헌법재판소를 없애버려야 한다”고 주장했다....
-                </p>
-                <h1>"전한길 절대 쫄지마라…탄핵땐 헌재 부숴야"</h1>
-                <br>
-                <p>김용원 인권위원회(인권위) 상임위원이 내란 선동 혐의로 경찰에 고발된 한국사 강사 전한길씨에 대한 무료변론을 자청하면서 “탄핵이 되면 헌법재판소를 없애버려야 한다”고 주장했다....
-                </p>
-
-            </div>
-        </section>
+        <div class="container">
+            
+        </div>
         <section class="news-list">
-                
+
         </section>
     </main>
     <footer>
+        <ul>
+            <li>
+                <a href="https://github.com/sparta-news" style="text-decoration: none;">
+                    <p>Git Hub</p>
+                </a>
+            </li>
+            <li>
+                <a href="https://amazing-bromine-dd7.notion.site/3-17a7f74dec6a809b8356d156d910565e?pvs=74"
+                    style="text-decoration: none;">
+                    <p>Team : sparta - 3</p>
+                </a>
+            </li>
+
+
+        </ul>
+        <p>&copy; 2025 (주) Sparta News. All rights reserved.</p>
 
     </footer>
+
 </body>
 
 </html>
