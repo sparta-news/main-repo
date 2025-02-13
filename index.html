@@ -74,6 +74,7 @@
         .category:hover {
             transform: translateY(-10px);
             transition: all 0.3s ease-in-out;
+            cursor: pointer;
         }
 
 
@@ -198,9 +199,13 @@
             color: #424242;
         }
     </style>
-
-
     <script type="module">
+        $(function () {
+            $('#header').load('header.html')
+            $('#footer').load('footer.html')
+        });
+
+
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
         import { getFirestore, collection, doc, getDoc, getDocs, query, where, orderBy, limit, Timestamp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
@@ -227,7 +232,7 @@
             let id = doc.id;
             let title = row["title"];
             let content = row["contents"]
-            if(cnt == 0){
+            if (cnt == 0) {
                 let temp = `
                 <section class="hot-topic" onclick="window.open('detail_page.html?id=${id}')">
                 <img class="topic-img"
@@ -240,9 +245,9 @@
                 </div>
             </section>
             `
-            $(".container").append(temp);
-            cnt++;
-            continue;
+                $(".container").append(temp);
+                cnt++;
+                continue;
             }
 
             let temp = `<div class="news-box" onclick="window.open('detail_page.html?id=${id}')">
@@ -261,72 +266,17 @@
 
 
 <body>
-    <header>
-        <div id="search">
-            <h1 id="headIcon" style="color: #00C73C;" onclick="window.open('index.html','_self')">News</h1>
-            <div>
-                <button type="button" onclick="window.open('upload.html')"><svg xmlns="http://www.w3.org/2000/svg"
-                        width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd"
-                            d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
-                    </svg></button>
-                <button><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                        class="bi bi-search" viewBox="0 0 16 16">
-                        <path
-                            d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
-                    </svg></button>
-            </div>
-        </div>
-        <nav>
-            <ul>
-                <li class="category">
-                    <p>정치</p>
-                </li>
-                <li class="category">
-                    <p>경제</p>
-                </li>
-                <li class="category">
-                    <p>사회</p>
-                </li>
-                <li class="category">
-                    <p>생활</p>
-                </li>
-                <li class="category">
-                    <p>과학 기술</p>
-                </li>
-                <li class="category">
-                    <p>세계</p>
-                </li>
-            </ul>
-        </nav>
-    </header>
+    <div id="header"></div>
     <main>
         <div class="container">
-            
+
         </div>
         <section class="news-list">
 
         </section>
     </main>
-    <footer>
-        <ul>
-            <li>
-                <a href="https://github.com/sparta-news" style="text-decoration: none;">
-                    <p>Git Hub</p>
-                </a>
-            </li>
-            <li>
-                <a href="https://amazing-bromine-dd7.notion.site/3-17a7f74dec6a809b8356d156d910565e?pvs=74"
-                    style="text-decoration: none;">
-                    <p>Team : sparta - 3</p>
-                </a>
-            </li>
+    <div id="footer"></div>
 
-
-        </ul>
-        <p>&copy; 2025 (주) Sparta News. All rights reserved.</p>
-
-    </footer>
 
 </body>
 
