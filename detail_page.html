@@ -16,7 +16,7 @@
 
     body {
       font-family: Arial, sans-serif;
-      background-color: white;
+      background-color: rgb(255, 255, 255);
       margin: 0;
       padding: 0;
       display: flex;
@@ -39,6 +39,52 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
+    }
+
+    footer {
+      background-color: #f4f6f8;
+      width: 100%;
+      height: 150px;
+      margin-top: 5%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      font-size: 12px;
+      font-weight: 500;
+      color: #424242;
+    }
+
+    footer>ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+    }
+
+    footer>ul li {
+      padding: 10px 15px;
+      position: relative;
+    }
+
+    footer>ul li:not(:last-child)::after {
+      content: '|';
+      position: absolute;
+      top: 10px;
+      right: 0px;
+      /* 위치 조정 */
+      color: #424242;
+    }
+
+    footer>p {
+      margin-left: 15px;
+    }
+
+    a:link {
+      color: #424242;
+    }
+
+    a:visited {
+      color: #424242;
     }
 
     #search {
@@ -170,7 +216,7 @@
 
     .rating button:hover {
       background-color: rgba(0, 199, 60, 0.1);
-      box-shadow: 0 6px 8px rgba(0, 199, 60, 0.5); 
+      box-shadow: 0 6px 8px rgba(0, 199, 60, 0.5);
     }
 
 
@@ -195,7 +241,7 @@
 
 
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-    import { getFirestore, collection, doc, getDoc, getDocs, query, where, orderBy, limit, Timestamp, updateDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+    import { getFirestore, collection, doc, getDoc, getDocs, query, where, orderBy, limit, Timestamp, updateDoc, addDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
     // Firebase 구성 정보
     const firebaseConfig = {
@@ -484,11 +530,26 @@
 
       <!-- rating 기능 구현 필요 -->
       <div class="rating">
-        <button id="rating_0"><p>😀 유용함</p> <p><span id="count_0">0</span></p></button>
-        <button id="rating_1"><p>😀 흥미진진</p> <p><span id="count_1">0</span></p></button>
-        <button id="rating_2"><p>😀 공감백배</p> <p><span id="count_2">0</span></p></button>
-        <button id="rating_3"><p>😀 분석탁월</p> <p><span id="count_3">0</span></p></button>
-        <button id="rating_4"><p>😀 후속강추</p> <p><span id="count_4">0</span></p></button>
+        <button id="rating_0">
+          <p> 💡 유용함</p>
+          <p><span id="count_0">0</span></p>
+        </button>
+        <button id="rating_1">
+          <p> 🤩 흥미진진</p>
+          <p><span id="count_1">0</span></p>
+        </button>
+        <button id="rating_2">
+          <p> 💖 공감백배</p>
+          <p><span id="count_2">0</span></p>
+        </button>
+        <button id="rating_3">
+          <p> 🧐 분석탁월</p>
+          <p><span id="count_3">0</span></p>
+        </button>
+        <button id="rating_4">
+          <p> 📢 후속강추</p>
+          <p><span id="count_4">0</span></p>
+        </button>
       </div>
 
 
@@ -501,4 +562,23 @@
   </div>
 </body>
 
+<footer>
+  <ul>
+    <li>
+      <a href="https://github.com/sparta-news" style="text-decoration: none;">
+        <p>Git Hub</p>
+      </a>
+    </li>
+    <li>
+      <a href="https://amazing-bromine-dd7.notion.site/3-17a7f74dec6a809b8356d156d910565e?pvs=74"
+        style="text-decoration: none;">
+        <p>Team : sparta - 3</p>
+      </a>
+    </li>
+
+
+  </ul>
+  <p>&copy; 2025 (주) Sparta News. All rights reserved.</p>
+
+</footer>
 </html>
